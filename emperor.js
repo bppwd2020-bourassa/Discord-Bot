@@ -1,4 +1,11 @@
 const Discord = require('discord.js');
+require('dotenv').config();
+
+const config = {
+  token: process.env.TOKEN,
+  PREFIX: process.env.PREFIX
+};
+
 const client = new Discord.Client();
 
 client.on('ready', () => {
@@ -9,11 +16,16 @@ client.on('message', msg => {
   if (msg.content === 'pog') {
     msg.reply('champ');
   }
-  client.on('message', message => {
-    if (message.content === 'what is my avatar') {
-      message.reply(message.author.displayAvatarURL());
-    }
+
+  if (msg.content === 'me') {
+    msg.reply(msg.author.displayAvatarURL());
   }
+
+  if (msg.content === 'roll') {
+    int = Math.floor((Math.random() * 20) + 1)
+    msg.reply(int);
+  }
+
 });
 
-client.login('NzEzMTAyNjAzMjM5NTU1MTE1.XsbPhg.3bqrcWofdGBHm46dL-kIYds9deU');
+client.login(config.token);
