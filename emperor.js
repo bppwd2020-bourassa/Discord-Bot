@@ -14,27 +14,44 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   
-  if(msg.content.substring(0,1) == (config.prefix)) {
+  if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 
-    console.log(config.prefix);
+    const args = msg.content.slice(config.prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
 
-    if (msg.content.substring(1) === 'pog') {
+    if (command === 'pog') {
       msg.reply('champ');
     }
 
-    if (msg.content.substring(1) === 'me') {
+    if (command === 'me') {
       msg.reply(msg.author.displayAvatarURL());
     }
 
-    if (msg.content.substring(1) === 'roll') {
+    if (command === 'roll') {
       int = Math.floor((Math.random() * 20) + 1)
       msg.reply(int);
     }
 
-    if(msg.content.substring(1) === 'role') {
-      
+    if (command === 'args-info') {
+      if (!args.length) {
+        return msg.channel.send(`You didn't provide any arguments, ${msg.author}!`);
+      }
+    
+      msg.channel.send(`Command name: ${command}\nArguments: ${args}`);
     }
-  }
+
+    if(command === 'role') {
+      if (!args.length) {
+        return msg.channel.send(`You didn't provide any arguments, ${msg.author}!`);
+      }
+      const taggedUser = msg.mentions.users.first();
+
+      msg.reply("The user mentioned is: ", taggedUser)
+    }
+
 });
+
+
+
 
 client.login(config.token);
