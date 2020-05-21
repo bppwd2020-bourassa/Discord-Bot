@@ -40,13 +40,13 @@ client.on('message', msg => {
       msg.channel.send(`Command name: ${command}\nArguments: ${args}`);
     }
 
-    if(command === 'role') {
+    if(command === 'mention') {
       if (!args.length) {
         return msg.channel.send(`You didn't provide any arguments, ${msg.author}!`);
       }
       const taggedUser = msg.mentions.users.first();
 
-      msg.reply("The user mentioned is: ", taggedUser)
+      msg.channel.send(`The user mentioned is: ${taggedUser.username}`)
     }
 
 });
