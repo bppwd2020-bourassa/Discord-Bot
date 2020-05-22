@@ -57,6 +57,50 @@ client.on('message', msg => {
       if(!role) msg.channel.send("specify the role you would like to give to the user")
       user.addRole(role.id), msg.channel.send(`${user} now has the ${role} role`)
     }
+  });
+
+  client.on('event', async (first, last) => {
+    if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
+
+    const args = msg.content.slice(config.prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+
+    if(command === 'rps') {
+      const chooseArr = ["🗻", "📰", "✂"];
+
+      const embed = new RichEmbed()
+        .setColor("#ffffff")
+        .setFooter(msg.guild.me.displayName, client.user.displayAvatarURL)
+        .setDescription("Add a reaction to one of these emojis to play the game")
+        .setTimestamp();
+
+      const m = await msg.channel.send(embed);
+      const reacted = await promptMessage(m, message.author, 30, chooseArr);
+
+      const botChoice = chooseArr[Math.floor(Math.random() * chooseArr.length)];
+
+      const result = await getResult(reacted, botChoice);
+      await m.clearReactions();
+
+      embed.setDescription("")
+           .setField(result, `${reacted} vs ${botChoice}`)
+
+      m.edit(embed);
+
+      function getResult(me,clientChosen) {
+        if ((me === "🗻" && clientChosen === "✂") ||
+          (me === "📰" && clientChosen === "🗻") ||
+          (me === "✂" && clientChosen === "📰")) {
+            return "You won!"
+          }
+        else if (me === clientChosen) {
+          return "Its a tie!"
+        }
+        else {
+          return "You lost!"
+        }
+      }
+    }
 
 });
 
