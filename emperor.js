@@ -46,7 +46,16 @@ client.on('message', msg => {
       }
       const taggedUser = msg.mentions.users.first();
 
-      msg.channel.send(`The user mentioned is: ${taggedUser.username}`)
+      msg.channel.send(taggedUser.roles)
+    }
+
+    if(command === 'giverole') {
+    
+      const user = msg.mentions.users.first();
+      if(!user) msg.channel.send("specify the user you would like to give the role to")
+      const role = msg.cache.roles.find(r => r.name === args.slice(1).join(" "));
+      if(!role) msg.channel.send("specify the role you would like to give to the user")
+      user.addRole(role.id), msg.channel.send(`${user} now has the ${role} role`)
     }
 
 });
